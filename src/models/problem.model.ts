@@ -57,8 +57,8 @@ export interface IProblem extends Document {
 	category: string;
 	difficulty: string;
     order: number;
-	likes: 0;
-	dislikes: 0;
+	likes: number;
+	dislikes: number;
 	videoId?: "";
 	link?: "";
     createdAt?: Date;
