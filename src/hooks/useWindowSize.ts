@@ -20,6 +20,7 @@ export default function useWindowSize() {
 				window.removeEventListener("resize", changeWindowSize);
 			};
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return windowSize;
