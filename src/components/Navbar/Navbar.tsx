@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { useSetRecoilState } from "recoil";
+import { HiAcademicCap } from "react-icons/hi";
+
 type NavbarProps = {};
 
 const Navbar: React.FC<NavbarProps> = () => {
@@ -12,8 +14,8 @@ const Navbar: React.FC<NavbarProps> = () => {
 	};
 	return (
 		<div className='flex items-center justify-between sm:px-12 px-2 md:px-24'>
-			<Link href='/' className='flex items-center justify-center h-20'>
-				<Image src='/logo.jpg' alt='DurisCode' height={200} width={200} />
+			<Link href='/'  className='h-[22px] flex flex-row bg-dark-layer-1 text-brand-orange'>
+				Duris Code<HiAcademicCap />
 			</Link>
 			<div className='flex items-center'>
 				<button
