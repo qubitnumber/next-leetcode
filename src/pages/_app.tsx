@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
 				<Head>
 					<title>DurisCode</title>
 					<meta name='viewport' content='width=device-width, initial-scale=1' />
-					<link rel='icon' href='/logo.jpg' />
+					<link rel='icon' href='/favicon.icon' />
 					<meta
 						name='description'
 						content='Web application that contains Duris Code problems and video solutions'
