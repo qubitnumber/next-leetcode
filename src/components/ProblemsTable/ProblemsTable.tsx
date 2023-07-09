@@ -121,7 +121,7 @@ function useGetProblems(setLoadingProblems: React.Dispatch<React.SetStateAction<
 			setLoadingProblems(true);
 			try {
 				const res = await fetch('/api/problem/getProblems',{
-					method: 'GET',
+					method: 'POST',
 					headers:{
 						'Content-Type':'application/json'
 					},

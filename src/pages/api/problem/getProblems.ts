@@ -8,7 +8,7 @@ type Data = {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-    if (req.method==='GET') {
+    if (req.method==='POST') {
         const data = await getProblems();
         res.status(201).json({ message: 'problems retrieved', problems: data });
         return
