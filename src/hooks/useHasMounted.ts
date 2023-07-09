@@ -5,6 +5,7 @@ function useHasMounted() {
 
 	useEffect(() => {
 		setHasMounted(true);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return hasMounted;

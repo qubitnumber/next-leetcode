@@ -52,6 +52,7 @@ function useCloseModal() {
 		};
 		window.addEventListener("keydown", handleEsc);
 		return () => window.removeEventListener("keydown", handleEsc);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return closeModal;
