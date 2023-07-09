@@ -15,7 +15,7 @@ const Login: React.FC<LoginProps> = () => {
 	return (
 		<div className='space-y-6 px-6 pb-4 mb-10 flex-col'>
 			<h3 className='text-xl font-medium text-white'>Thanks for Donations</h3>
-			<div className='text-sm font-medium text-brand-orange'>
+			<div className='text-sm font-medium text-black'>
 				Buy Me a Coffee{" "}
 				<div className='text-blue-700 hover:underline'>
 					<a
@@ -28,7 +28,7 @@ const Login: React.FC<LoginProps> = () => {
 					</a>
 				</div>
 			</div>
-			<div className='text-sm font-medium text-brand-orange'>
+			<div className='text-sm font-medium text-black'>
 				KaKao Pay{" "}
 				<div className='text-blue-700 hover:underline'>
 					<a

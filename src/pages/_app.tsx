@@ -11,12 +11,12 @@ export default function App({ Component, pageProps }: AppProps) {
 		<SessionProvider session={pageProps.session}>
 			<RecoilRoot>
 				<Head>
-					<title>LeetClone</title>
+					<title>DurisCode</title>
 					<meta name='viewport' content='width=device-width, initial-scale=1' />
-					<link rel='icon' href='/favicon.png' />
+					<link rel='icon' href='/logo.jpg' />
 					<meta
 						name='description'
-						content='Web application that contains leetcode problems and video solutions'
+						content='Web application that contains Duris Code problems and video solutions'
 					/>
 				</Head>
 				<ToastContainer />

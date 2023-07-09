@@ -51,7 +51,7 @@ const AddProblem: React.FC<AddProblemProps> = () => {
 
 	return (
 		<form className='space-y-6 px-6 pb-4' onSubmit={handleRegister}>
-			<h3 className='text-xl font-medium text-white'>Register to LeetClone</h3>
+			<h3 className='text-xl font-medium text-white'>Register to Duris Code</h3>
 			<div>
 				<label htmlFor='email' className='text-sm font-medium block mb-2 text-gray-300'>
 					Id
