@@ -18,7 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             return;
         }
         const data = await createProblem({
-            id, title, difficulty, category, order, likes: 0, dislikes: 0, ...otherProps
+            id, title, difficulty, category, order, likes: 0, dislikes: 0, acceptance: 0,
+            ...otherProps
         });
         if (!data) {
             res.status(422).json({ message: 'Problems not created', problem: {} });

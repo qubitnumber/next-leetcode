@@ -6,6 +6,7 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import EditorFooter from "./EditorFooter";
 import { Problem } from "@/models/problem.model";
+import { IUser } from "@/models/user.model";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { problems } from "@/utils/problems";
@@ -54,8 +55,61 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 			userCode = userCode.slice(userCode.indexOf(problem.starterFunctionName));
 			const cb = new Function(`return ${userCode}`)();
 			const handler = problems[pid as string].handlerFunction;
+			let userCountSolvedProblem = 0;
+			let userCountSubmittedProblem = 0;
 
 			if (typeof handler === "function") {
+				try {
+					const usersRes = await fetch('/api/user/getUsers', {
+						method: 'POST',
+						headers: new Headers({
+							'Content-Type': 'application/json',
+						})
+					});
+					const { users } = await usersRes.json();
+					const user = users.filter((user: IUser) => user.email === session?.user.email)[0];
+
+					users.forEach((user: IUser) => {
+						if (user.submittedProblems.filter((id: string) => id === problem.id).length > 0) {
+							userCountSubmittedProblem += 1;
+						}
+					});
+					users.forEach((user: IUser) => {
+						if (user.solvedProblems.filter((id: string) => id === problem.id).length > 0) {
+							userCountSolvedProblem += 1;
+						}
+					});
+
+					if (!user.submittedProblems.includes(problem.id)) {
+						const updatedUser = await fetch('/api/user/updateUser', {
+							method: 'POST',
+							headers: new Headers({
+								'Content-Type': 'application/json',
+							}),
+							body: JSON.stringify({
+								filter: { email: session.user.email},
+								update: {
+									submittedProblems: Array.from(new Set([...user.submittedProblems, problem.id])),
+								}
+							}),
+						});
+						const newRes = await fetch('/api/problem/updateProblem', {
+							method: 'POST',
+							headers: new Headers({
+								'Content-Type': 'application/json',
+							}),
+							body: JSON.stringify({
+								filter: { id: problem.id},
+								update: {
+									acceptance: (userCountSolvedProblem / (1 + userCountSubmittedProblem)).toFixed(1),
+								}
+							}),
+						});
+					}
+				} catch (error: any) {
+					console.log("Invalid request");
+				};
+
 				const success = handler(cb);
 				if (success) {
 					toast.success("Congrats! All tests passed!", {
@@ -69,31 +123,59 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 					}, 4000);
 
 					try {
-						const rawRes = await fetch('/api/user/getUser', {
+						let userCountSolvedProblem = 0;
+						let userCountSubmittedProblem = 0;
+						const usersRes = await fetch('/api/user/getUsers', {
 							method: 'POST',
 							headers: new Headers({
 								'Content-Type': 'application/json',
-							}),
-							body: JSON.stringify({ email: session?.user.email }),
+							})
 						});
-						const { user: rawUser} = await rawRes.json();
-						let solvedProblems = rawUser.solvedProblems;
+						const { users } = await usersRes.json();
+						const user = users.filter((user: IUser) => user.email === session?.user.email)[0];
+						users.forEach((user: IUser) => {
+							if (user.submittedProblems.filter((id: string) => id === problem.id).length > 0) {
+								userCountSubmittedProblem += 1;
+							}
+						});
+						users.forEach((user: IUser) => {
+							if (user.solvedProblems.filter((id: string) => id === problem.id).length > 0) {
+								userCountSolvedProblem += 1;
+							}
+						});
+						if (!user.solvedProblems.includes(problem.id)) {
+							const newUserRes = await fetch('/api/user/updateUser', {
+								method: 'POST',
+								headers: new Headers({
+									'Content-Type': 'application/json',
+								}),
+								body: JSON.stringify({
+									filter: { email: session.user.email},
+									update: {
+										solvedProblems: Array.from(new Set([...user.solvedProblems, problem.id])),
+									}
+								}),
+							});
 
-						const newRes = await fetch('/api/user/updateUser', {
-							method: 'POST',
-							headers: new Headers({
-								'Content-Type': 'application/json',
-							}),
-							body: JSON.stringify({
-								filter: { email: session.user.email},
-								update: { solvedProblems: Array.from(new Set([...solvedProblems, pid])) }
-							}),
-						});
-		
-						const { user: newUser } = await newRes.json();
-						if (newUser) {
-							setSolved(true);
-						}
+							const newProblemRes = await fetch('/api/problem/updateProblem', {
+								method: 'POST',
+								headers: new Headers({
+									'Content-Type': 'application/json',
+								}),
+								body: JSON.stringify({
+									filter: { id: problem.id},
+									update: {
+										acceptance: ((1 + userCountSolvedProblem) / userCountSubmittedProblem).toFixed(1),
+									}
+								}),
+							});
+
+							const { user: updatedUser } = await newUserRes.json();
+							const { problem: updatedProblem } = await newProblemRes.json();
+							if (updatedUser && updatedProblem) {
+								setSolved(true);
+							}
+						};
 					} catch (error: any) {
 						console.log("Invalid request");
 					};

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { BsCheckCircle } from "react-icons/bs";
 import { AiFillYoutube } from "react-icons/ai";
+import { TiBatteryFull, TiBatteryLow } from "react-icons/ti";
 import { IoClose } from "react-icons/io5";
 import YouTube from "react-youtube";
 import { useSession } from "next-auth/react";
@@ -17,7 +17,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ setLoadingProblems }) => 
 		videoId: "",
 	});
 	const problems = useGetProblems(setLoadingProblems);
-	const solvedProblems = useGetSolvedProblems();
+	const {solvedProblems, submittedProblems } = useGetSolvedSubmittedProblems();
 
 	const closeModal = () => {
 		setYoutubePlayer({ isOpen: false, videoId: "" });
@@ -45,8 +45,13 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ setLoadingProblems }) => 
 							: "text-dark-pink";
 					return (
 						<tr className={`${idx % 2 == 1 ? "bg-dark-layer-1" : ""}`} key={problem.id}>
-							<th className='px-2 py-4 font-medium whitespace-nowrap text-dark-green-s'>
-								{solvedProblems.includes(problem.id) && <BsCheckCircle fontSize={"18"} width='18' />}
+							<th className={`px-2 py-4 font-medium whitespace-nowrap`}>
+								{solvedProblems.includes(problem.id)
+									? <TiBatteryFull fontSize={"28"} width='28' className="text-dark-green-s"/>
+									: submittedProblems.includes(problem.id)
+									? <TiBatteryLow fontSize={"28"} width='28' className="text-red-600/75"/>
+									: ''
+								}
 							</th>
 							<td className='px-6 py-4'>
 								{problem.link ? (
@@ -68,6 +73,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ setLoadingProblems }) => 
 							</td>
 							<td className={`px-6 py-4 ${difficulyColor}`}>{problem.difficulty}</td>
 							<td className={"px-6 py-4"}>{problem.category}</td>
+							<td className={"px-6 py-4"}>{`${(problem.acceptance*100).toFixed(1)}%`}</td>
 							<td className={"px-6 py-4"}>
 								{problem.videoId ? (
 									<AiFillYoutube
@@ -139,15 +145,17 @@ function useGetProblems(setLoadingProblems: React.Dispatch<React.SetStateAction<
 
 		getProblems();
 	}, [setLoadingProblems]);
+
 	return problems;
 }
 
-function useGetSolvedProblems() {
+function useGetSolvedSubmittedProblems() {
 	const [solvedProblems, setSolvedProblems] = useState<string[]>([]);
+	const [submittedProblems, setSubmittedProblems] = useState<string[]>([]);
     const {data: session} = useSession();
 
 	useEffect(() => {
-		const getSolvedProblems = async () => {
+		const getSolvedSubmittedProblems = async () => {
 			try {
 				const res = await fetch('/api/user/getUser', {
 					method: 'POST',
@@ -160,15 +168,15 @@ function useGetSolvedProblems() {
 				const { user } = await res.json();
 				if (user) {
 					setSolvedProblems(user.solvedProblems);
+					setSubmittedProblems(user.submittedProblems);
 				}
 			} catch (error: any) {
 				console.log("Invalid request");
 			};
 		};
 
-		if (session) getSolvedProblems();
-		if (!session) setSolvedProblems([]);
+		if (session) getSolvedSubmittedProblems();
 	}, [session]);
 
-	return solvedProblems;
+	return { solvedProblems, submittedProblems };
 }

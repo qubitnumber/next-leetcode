@@ -31,6 +31,10 @@ const problemSchema = new mongoose.Schema(
             type: Number,
             required: false,
         },
+        acceptance: {
+            type: Number,
+            required: false,
+        },
         videoId: {
             type: String,
             required: false,
@@ -59,6 +63,7 @@ export interface IProblem extends Document {
     order: number;
 	likes: number;
 	dislikes: number;
+    acceptance: number;
 	videoId?: "";
 	link?: "";
     createdAt?: Date;

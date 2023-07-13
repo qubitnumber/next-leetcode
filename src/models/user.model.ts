@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
             type: Array,
             required: false,
         },
+        submittedProblems: {
+            type: Array,
+            required: false,
+        },
         starredProblems: {
             type: Array,
             required: false,
@@ -57,6 +61,7 @@ export interface IUser extends Document {
     likedProblems: [];
     dislikedProblems: [];
     solvedProblems: [];
+    submittedProblems: [];
     starredProblems: [];
 }
 

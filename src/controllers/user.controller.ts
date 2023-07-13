@@ -39,3 +39,9 @@ export const updateUser = async (filter: object, update: object) => {
     return user;
 }
 
+export const getUsers = async () => {
+    await connectDB();
+    const problems: UserX[] = await UserModel.find({});
+    return problems;
+}
+
