@@ -26,7 +26,7 @@ const handlerRomanToInteger
 		}
 		return true;
 	} catch (error: any) {
-		console.log("Error from jumpGameHandler: ", error);
+		console.log("Error from romanToIntegerHandler: ", error);
 		throw new Error(error);
 	}
 };
@@ -85,6 +85,6 @@ It is <strong>guaranteed</strong> that <code>s</code> is a valid roman numeral i
 </li>`,
 	handlerFunction: handlerRomanToInteger,
 	starterCode: starterCodeRomanToInteger,
-	order: 1,
+	order: 6,
 	starterFunctionName: "function romanToInt(",
 };
