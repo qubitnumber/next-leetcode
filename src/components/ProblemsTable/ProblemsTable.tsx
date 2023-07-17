@@ -72,7 +72,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({ setLoadingProblems }) => 
 								)}
 							</td>
 							<td className={`px-6 py-4 ${difficulyColor}`}>{problem.difficulty}</td>
-							<td className={"px-6 py-4"}>{problem.category}</td>
+							{/* <td className={"px-6 py-4"}>{problem.category}</td> */}
 							<td className={"px-6 py-4"}>{`${(problem.acceptance*100).toFixed(1)}%`}</td>
 							<td className={"px-6 py-4"}>
 								{problem.videoId ? (
