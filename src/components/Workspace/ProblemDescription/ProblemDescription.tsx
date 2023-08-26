@@ -19,12 +19,11 @@ type ProblemDescriptionProps = {
 
 const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem, _solved }) => {
     const {data: session} = useSession();
-	const { currentProblem, loading, problemDifficultyClass, setCurrentProblem } = useGetCurrentProblem(problem.id);
+	const { currentProblem, loadingProblem, problemDifficultyClass, setCurrentProblem } = useGetCurrentProblem(problem.id);
 	const { liked, disliked, solved, setData, starred } = useGetUsersDataOnProblem(problem.id);
 	const [updating, setUpdating] = useState(false);
 	const [userDoc, setUserDoc] = useState<IUser>();
 	const [problemDoc, setProblemDoc] = useState<ProblemX>();
-
 
 	const returnUserDataAndProblemData = async () => {
 		try {
@@ -306,14 +305,14 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem, _solve
 				</div>
 			</div>
 
-			<div className='flex px-0 py-4 h-[calc(100vh-94px)] overflow-y-auto'>
+			<div className='flex flex-col px-0 py-4 h-[calc(100vh-94px)] overflow-y-auto'>
 				<div className='px-5'>
 					{/* Problem heading */}
 					<div className='w-full'>
 						<div className='flex space-x-4'>
 							<div className='flex-1 mr-2 text-lg text-white font-medium'>{problem?.title}</div>
 						</div>
-						{!loading && currentProblem && (
+						{!loadingProblem && currentProblem && (
 							<div className='flex items-center mt-3'>
 								<div
 									className={`${problemDifficultyClass} inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize `}
@@ -356,7 +355,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem, _solve
 							</div>
 						)}
 
-						{loading && (
+						{loadingProblem && (
 							<div className='mt-3 flex space-x-2'>
 								<RectangleSkeleton />
 								<CircleSkeleton />
@@ -417,13 +416,13 @@ export default ProblemDescription;
 
 function useGetCurrentProblem(problemId: string) {
 	const [currentProblem, setCurrentProblem] = useState<ProblemX | null>(null);
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loadingProblem, setLoadingProblem] = useState<boolean>(true);
 	const [problemDifficultyClass, setProblemDifficultyClass] = useState<string>("");
 
 	useEffect(() => {
 		// Get problem from DB
 		const getCurrentProblem = async () => {
-			setLoading(true);
+			setLoadingProblem(true);
 			try {
 				const res = await fetch('/api/problem/getProblem',{
 					method: 'POST',
@@ -437,7 +436,6 @@ function useGetCurrentProblem(problemId: string) {
 				const { problem } = await res.json();
 				if (problem) {
 					setCurrentProblem({ id: problem.id, ...problem } as ProblemX);
-					// easy, medium, hard
 					setProblemDifficultyClass(
 						problem.difficulty === "Easy"
 							? "bg-olive text-olive"
@@ -446,7 +444,7 @@ function useGetCurrentProblem(problemId: string) {
 							: " bg-dark-pink text-dark-pink"
 					);
 				}
-				setLoading(false);
+				setLoadingProblem(false);
 			} catch (error: any) {
 				console.log("Invalid request");
 			};
@@ -454,7 +452,7 @@ function useGetCurrentProblem(problemId: string) {
 		getCurrentProblem();
 	}, [problemId]);
 
-	return { currentProblem, loading, problemDifficultyClass, setCurrentProblem };
+	return { currentProblem, loadingProblem, problemDifficultyClass, setCurrentProblem };
 }
 
 function useGetUsersDataOnProblem(problemId: string) {

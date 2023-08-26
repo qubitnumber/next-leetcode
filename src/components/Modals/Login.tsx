@@ -1,6 +1,6 @@
 import { authModalState } from "@/atoms/authModalAtom";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { toast } from "react-toastify";
 import { useSession, signIn } from "next-auth/react";
@@ -78,13 +78,12 @@ const Login: React.FC<LoginProps> = () => {
             '
 			>
 				{status === 'loading' ? "Loading..." : "Log In"}
-                Log In
 			</button>
-			<button className='flex w-full justify-end' onClick={() => handleClick("forgotPassword")}>
+			{/* <button className='flex w-full justify-end' onClick={() => handleClick("forgotPassword")}>
 				<a href='#' className='text-sm block text-brand-orange hover:underline w-full text-right'>
 					Forgot Password?
 				</a>
-			</button>
+			</button> */}
 			<div className='text-sm font-medium text-gray-300'>
 				Not Registered?{" "}
 				<a href='#' className='text-blue-700 hover:underline' onClick={() => handleClick("register")}>

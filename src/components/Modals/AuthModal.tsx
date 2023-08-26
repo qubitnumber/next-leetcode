@@ -5,6 +5,7 @@ import Login from "./Login";
 import ResetPassword from "./ResetPassword";
 import Signup from "./Signup";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRouter } from "next/router";
 
 type AuthModalProps = {};
 
@@ -40,9 +41,11 @@ export default AuthModal;
 
 function useCloseModal() {
 	const setAuthModal = useSetRecoilState(authModalState);
+	const router = useRouter();
 
 	const closeModal = () => {
 		setAuthModal((prev) => ({ ...prev, isOpen: false, type: "login" }));
+		router.push("/");
 	};
 
 	useEffect(() => {
